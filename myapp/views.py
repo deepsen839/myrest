@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from myapp.models import Dog,Breed
-from myapp.serializers import breedSerializer,dogsSerializer
+from myapp.serializers import breedSerializer,dogsSerializer,dogsforgetSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,7 +12,7 @@ class DogList(APIView):
     """
     def get(self, request, format=None):
         snippets = Dog.objects.all()
-        serializer = dogsSerializer(snippets, many=True)
+        serializer = dogsforgetSerializer(snippets, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -35,7 +35,7 @@ class DogDetail(APIView):
 
     def get(self, request, pk, format=None):
         dogs = self.get_object(pk)
-        serializer = dogsSerializer(dogs)
+        serializer = dogsforgetSerializer(dogs)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
@@ -43,6 +43,9 @@ class DogDetail(APIView):
         serializer = dogsSerializer(dogs, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            dogs = self.get_object(pk)
+            serializer = dogsforgetSerializer(dogs)
+
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -75,8 +78,8 @@ class BreedDetail(APIView):
     """
     def get_object(self, pk):
         try:
-            return Dog.objects.get(pk=pk)
-        except Dog.DoesNotExist:
+            return Breed.objects.get(pk=pk)
+        except Breed.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
