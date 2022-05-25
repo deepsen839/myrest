@@ -69,7 +69,7 @@ class BreedList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DogDetail(APIView):
+class BreedDetail(APIView):
     """
     Retrieve, update or delete a snippet instance.
     """
